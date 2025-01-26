@@ -1,0 +1,35 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'ed7a77d3-6de8-4b6c-a685-bc8d7911acea'  # Replace with your service connection name
+  imageRepository: 'app-dc-cloud-shoaibahmed'  # Replace with your desired image repository name
+  containerRegistry: 'acrdccloudshoaibahmed.azurecr.io'  # Replace with your ACR URL
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'  # Path to your Dockerfile
+  tag: '$(Build.BuildId)'  # Unique tag for each build
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
