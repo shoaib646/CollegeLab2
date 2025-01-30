@@ -1,5 +1,5 @@
 trigger:
-- main  # Adjust branch if needed
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -7,13 +7,13 @@ pool:
 steps:
 - task: Docker@2
   inputs:
-    containerRegistry: '$(dockerRegistryServiceConnection)'  # Azure Container Registry
-    repository: 'acrdccloudshoaibahmed/myapp'  # Modify accordingly
+    containerRegistry: 'acrdccloudshoaibahmed'  # Use your ACR service connection name
+    repository: 'acrdccloudshoaibahmed/myapp'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
   
 - task: AzureWebAppContainer@1
   inputs:
-    azureSubscription: '86d45bcc-ef4a-4a2b-beb4-88b06e7e2a8a'
-    appName: 'app-dc-cloud-shoaibahmed'
+    azureSubscription: 'Azure-Subscription'  # Use the exact name of your ARM service connection
+    appName: 'acrdccloudshoaibahmed'
     containers: 'acrdccloudshoaibahmed.azurecr.io/myapp:latest'
